@@ -22,15 +22,24 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
-    shop();
+    displayItems();
+    // shop();
 });
 
 //query database, display products, begin inquirer prompts to start shopping
-function shop() {
-    connection.query("SELECT item_id, product_name, price FROM products", function (err, results) {
+//break this out into two functions - one to display the items, then one to inquire which item they want to purchase
+//otherwise we won't have results set that includes the stock
+function displayItems() {
+    connection.query("SELECT item_id, product_name, price FROM products", function (err, items) {
         if (err) throw err;
         console.log("\n");
-        console.table(results);
+        console.table(items);
+        shop();
+    })
+};
+function shop() {
+    connection.query("SELECT * FROM products", function (err, results) {
+        if (err) throw err;
         inquirer
             .prompt([
                 {
@@ -58,7 +67,34 @@ function shop() {
                         selection = results[i];
                     }
                 }
-                console.log("Your total cost is $" + selection.price * parseInt(answer.quantity) + ".")
+                //if statement to check stock compared to answer.quantity to see if purchase can go through
+                if (selection.stock_quantity >= parseInt(answer.quantity)) {
+                    console.log(selection);
+                    connection.query(
+                        "UPDATE products SET ? WHERE ?",
+                        [
+                            {
+                                stock_quantity: (selection.stock_quantity - parseInt(answer.quantity))
+                            },
+                            {
+                                item_id: selection.item_id
+                            }
+                        ],
+                        function (error) {
+                            if (error) throw err;
+                            console.log("Your total cost is $" + selection.price * parseInt(answer.quantity) + ".");
+                            console.log("\n");
+                            console.log(selection.stock_quantity);
+                            console.log("Would you like to purchase additional items?");
+                            displayItems();
+                        }
+                    );
+                }
+                else{
+                    console.log("Sorry, we don't have that many in stock. We have "+selection.stock_quantity+" in stock. Please select another item or a smaller quantity.");
+                    console.log("\n");
+                    displayItems();
+                }
             })
     })
-}
+};
