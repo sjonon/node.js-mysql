@@ -23,10 +23,9 @@ connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
     displayItems();
-    // shop();
 });
 
-//query database, display products
+//query database, display products, initiate shop function
 function displayItems() {
     connection.query("SELECT item_id, product_name, price FROM products", function (err, items) {
         if (err) throw err;
@@ -68,7 +67,7 @@ function shop() {
                 }
                 //if statement to check stock compared to answer.quantity to see if purchase can go through
                 if (selection.stock_quantity >= parseInt(answer.quantity)) {
-                    console.log(selection);
+                    // console.log(selection);
                     connection.query(
                         "UPDATE products SET ? WHERE ?",
                         [
@@ -83,7 +82,7 @@ function shop() {
                             if (error) throw error;
                             console.log("Your total cost is $" + selection.price * parseInt(answer.quantity) + ".");
                             console.log("\n");
-                            console.log(selection.stock_quantity);
+                            // console.log(selection.stock_quantity);
                             inquirer
                                 .prompt(
                                     {
@@ -114,7 +113,6 @@ function shop() {
                             message: "Would you like to keep shopping?"
                         })
                         .then(function (answer) {
-                            console.log(answer);
                             if (answer.beginshop === "Yes") {
                                 displayItems();
                             } else {
