@@ -26,9 +26,7 @@ connection.connect(function (err) {
     // shop();
 });
 
-//query database, display products, begin inquirer prompts to start shopping
-//break this out into two functions - one to display the items, then one to inquire which item they want to purchase
-//otherwise we won't have results set that includes the stock
+//query database, display products
 function displayItems() {
     connection.query("SELECT item_id, product_name, price FROM products", function (err, items) {
         if (err) throw err;
@@ -37,6 +35,7 @@ function displayItems() {
         shop();
     })
 };
+//begin inquirer prompts to start shopping
 function shop() {
     connection.query("SELECT * FROM products", function (err, results) {
         if (err) throw err;
@@ -81,20 +80,49 @@ function shop() {
                             }
                         ],
                         function (error) {
-                            if (error) throw err;
+                            if (error) throw error;
                             console.log("Your total cost is $" + selection.price * parseInt(answer.quantity) + ".");
                             console.log("\n");
                             console.log(selection.stock_quantity);
-                            console.log("Would you like to purchase additional items?");
-                            displayItems();
+                            inquirer
+                                .prompt(
+                                    {
+                                        name: "contshop",
+                                        type: "list",
+                                        choices: ["Yes", "No"],
+                                        message: "Would you like to purchase additional items?"
+                                    }
+                                )
+                                .then(function (answer) {
+                                    if (answer.contshop === "Yes") {
+                                        displayItems();
+                                    } else {
+                                        connection.end();
+                                    }
+                                })
                         }
-                    );
+                    )
                 }
-                else{
-                    console.log("Sorry, we don't have that many in stock. We have "+selection.stock_quantity+" in stock. Please select another item or a smaller quantity.");
+                else {
+                    console.log("Sorry, we don't have that many in stock. We have " + selection.stock_quantity + " in stock. Please select another item or a smaller quantity.");
                     console.log("\n");
-                    displayItems();
-                }
+                    inquirer
+                        .prompt({
+                            name: "beginshop",
+                            type: "list",
+                            choices: ["Yes", "No"],
+                            message: "Would you like to keep shopping?"
+                        })
+                        .then(function (answer) {
+                            console.log(answer);
+                            if (answer.beginshop === "Yes") {
+                                displayItems();
+                            } else {
+                                connection.end();
+                            }
+                        })
+                };
+
             })
     })
-};
+}
