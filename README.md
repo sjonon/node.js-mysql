@@ -30,15 +30,15 @@ To use this app you'll simply need to follow a few steps:
 
 * You will be prompted to select an action:
 
-![manager actions](assets/README_images/manager_actions.png)
+    ![manager actions](assets/README_images/manager_actions.png)
 
 * Selecting View Products for Sale will display a table of the products currently available.
 
-![table view](assets/README_images/view_products.png)
+    ![table view](assets/README_images/view_products.png)
 
 * Selecting View Low Inventory will display a table with products that currently have an inventory or 5 or fewer.
 
-![low inventory table](assets/README_images/low_inventory.png)
+    ![low inventory table](assets/README_images/low_inventory.png)
 
 * Selecting Add to Inventory will display a series of prompts to gather information on which item to update and the amount of inventory to be added to the current stock. The database will then be updated with this information and a table displaying the new inventory quantities will be displayed.
 
@@ -63,7 +63,7 @@ To use this app you'll simply need to follow a few steps:
 
 * Selecting Exit will end the connection to the database.
 
-    ![program exit](assets/README_images/exit.png);
+    ![program exit](assets/README_images/exit.png)
 
 
 ### Technologies used
