@@ -10,7 +10,7 @@ CREATE TABLE products(
     department_name VARCHAR(30) NOT NULL,
     price INTEGER NOT NULL,
     stock_quantity INTEGER
-)
+);
 
 INSERT INTO products(product_name, department_name, price, stock_quantity)
 VALUES
