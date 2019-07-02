@@ -106,10 +106,10 @@ function manager_choice() {
                         })
                 })
             } if (answer.manager_action === "Exit") {
+                console.log("Exiting. Goodbye!")
                 connection.end();
             } else if (answer.manager_action === "Add New Product"){
                 //adding new product to database - gathering inputs and then writing them to database table
-                console.log("last function here")
                 inquirer
                     .prompt(
                         [
